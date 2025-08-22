@@ -3,119 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
-    />
-
     <link rel="stylesheet" type="text/css" href="./assets/css/output.css" />
+
+      <!-- https://animate.style/ -->
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
   </head>
   <body class="bg-gray-950">
-    <!-- container -->
-    <section class="max-w-[450px] w-full mx-auto flex flex-col gap-4">
-      <div class="bg-gray-900 text-dark p-4 rounded-4xl">
-        <div
-          class="bg-black border-4 border-yellow-400 w-[120px] h-[120px] mx-auto rounded-full overflow-hidden mt-5 mb-3"
-        >
-          <img src="./image/avatar-photo.png" alt="Profile Picture" />
-        </div>
-        <h1 class="text-2xl font-bold text-yellow-500 text-center rounded-lg">
-          Your Name
-        </h1>
-        <p class="text-yellow-500 text-center">Your Designation</p>
-        <p class="text-gray-200 mb-5 text-center">
-          <i class="ph ph-building"></i> Your Company Name
-        </p>
-
-        <div class="grid grid-cols-2 gap-4 mb-5">
-          <div
-            class="flex flex-col bg-gray-950 rounded-xl py-4 text-white items-start justify-start pl-4"
-          >
-            <i class="mb-3 ph ph-calendar-dots text-3xl text-yellow-400"></i>
-            <span class="text-gray-300 font-semibold uppercase">10+ Years</span>
-            <span class="text-yellow-400 font-bold uppercase"
-              >Experience</span
-            >
-          </div>
-
-          <div
-            class="flex flex-col bg-gray-950 rounded-xl py-4 text-white items-start justify-start pl-4"
-          >
-            <i class="mb-3 ph ph-users-three text-3xl text-yellow-400"></i>
-            <span class="text-gray-300 font-semibold uppercase">30+ Happy</span>
-            <span class="text-yellow-400 font-bold uppercase">Clients</span>
-          </div>
+    <div id="card">
+      <div class="bg-white border max-w-[350px] mx-auto mt-4 overflow-hidden">
+        <div class="h-[100px] w-full bg-gradient-to-r from-[rgb(255,0,102)] to-[#b00620]"></div>
+        <div class="text-center p-6 py-8">
+          <img
+            src="./image/avatar.png"
+            alt="Profile Photo"
+            class="w-24 h-24 inline-block mb-3 animate__animated animate__zoomIn"
+          />
+          <h1 class="font-bold text-2xl mb-1 animate__animated animate__zoomIn">Shrikant Yadav</h1>
+          <p class="uppercase text-sm tracking-wider animate__animated animate__zoomIn">
+            Website Designer & Developer
+          </p>
+          <p class="text-gray-600 animate__animated animate__zoomIn">10+ Years of Experience</p>
         </div>
 
-        <section
-          class="text-gray-200 rounded-xl text-center mb-5 p-5 bg-gray-950 transition-shadow duration-300 ease-in-out"
-        >
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad maiores
-          error ea necessitatibus tenetur a vero sit. Cupiditate, explicabo! !
-        </section>
+        <div class="px-6 pb-8 text-gray-600">
+          <!-- Phone -->
+          <a
+            class="flex border border-gray-200 p-2 mb-3 items-center gap-3 animate__animated animate__backInLeft "
+            href="tel:911234567890"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#b00620" viewBox="0 0 256 256" class="border p-1 border-[#b00620] ">
+              <path d="M222.63 161.89l-47.36-21.05a12 12 0 0 0-11.21.75l-21.8 14.54a96.2 96.2 0 0 1-45.79-45.8l14.54-21.8a12 12 0 0 0 .75-11.21L94.11 30.4A12 12 0 0 0 82.23 23H40a12 12 0 0 0-12 12c0 104.39 84.61 189 189 189a12 12 0 0 0 12-12v-42.23a12 12 0 0 0-6.37-10.88Z"/>
+            </svg>
+            +91 1234567890
+          </a>
 
-        <section>
-          <h2 class="font-bold text-yellow-500 mb-4">Contact Information</h2>
-          <div class="text-gray-300">
-            <span
-              class="text-gray-200 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-envelope text-xl text-yellow-400"></i>
-              <a href="mailto:youremail@test.com" target="_blank"
-                >yourcompany@email.com</a
-              >
-            </span>
-            <span
-              class="text-gray-200 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-phone text-xl text-yellow-400"></i>
-              <a href="tel:123456789012" target="_blank">+12 3456789012</a>
-            </span>
-            <span
-              class="text-gray-200 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-map-pin-area text-xl text-yellow-400"></i>
-              <a href="">Narmadapuram, Madhya Pradesh</a>
-            </span>
-          </div>
-        </section>
+          <!-- Email -->
+          <a
+            class="flex border border-gray-200 p-2 mb-3 items-center gap-3 animate__animated animate__backInRight "
+            href="#"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#b00620" viewBox="0 0 256 256" class="border p-1 border-[#b00620] ">
+              <path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"/>
+            </svg>
+            myexample@email.com
+          </a>
 
-        <section>
-          <h2 class="font-bold text-yellow-500 mb-4">Connect With Me</h2>
-          <div class="text-gray-300 grid grid-cols-3 gap-3">
-            <a
-              target="_blank"
-              href="#"
-              class="text-gray-200 hover:text-yellow-400 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-linkedin-logo text-xl text-yellow-400"></i>
-              Linkedin
-            </a>
-            <a
-              target="_blank"
-              href="#"
-              class="text-gray-200 hover:text-yellow-400 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-github-logo text-xl text-yellow-400"></i> GitHub
-            </a>
-            <a
-              target="_blank"
-              href="https://digitingcard.com/"
-              class="text-gray-200 hover:text-yellow-400 bg-gray-950 inline-flex p-2 rounded-full pl-5 mb-3 w-full items-center gap-3"
-            >
-              <i class="ph ph-globe-simple text-xl text-yellow-400"></i> Website
-            </a>
-          </div>
-        </section>
- 
+          <!-- Website -->
+          <a
+            class="flex border border-gray-200 p-2 mb-3 items-center gap-3 animate__animated animate__backInLeft "
+            href="https://digitingcard.com/"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#b00620" viewBox="0 0 256 256" class="border p-1 border-[#b00620] ">
+              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm87.6,96H167.4a167.12,167.12,0,0,0-7.51-48.92A88.17,88.17,0,0,1,215.6,120ZM128,40c9.91,0,21.63,15.47,27.9,40H100.1C106.37,55.47,118.09,40,128,40ZM88.11,71.08A167.12,167.12,0,0,0,80.6,120H40.4A88.17,88.17,0,0,1,88.11,71.08ZM40.4,136H80.6a167.12,167.12,0,0,0,7.51,48.92A88.17,88.17,0,0,1,40.4,136ZM128,216c-9.91,0-21.63-15.47-27.9-40h55.8C149.63,200.53,137.91,216,128,216Zm39.89-31.08A167.12,167.12,0,0,0,175.4,136h40.2A88.17,88.17,0,0,1,167.89,184.92Z"/>
+            </svg>
+            www.digitingcard.com
+          </a>
+
+          <!-- Address -->
+          <a
+            class="flex border border-gray-200 p-2 mb-3 items-center gap-3 animate__animated animate__backInRight "
+            href="#"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#b00620" viewBox="0 0 256 256" class="border p-1 border-[#b00620] ">
+              <path d="M128,24a88,88,0,0,0-88,88c0,75.64,80.37,118.66,84,120.55a8,8,0,0,0,7.9,0c3.63-1.89,84-44.91,84-120.55A88,88,0,0,0,128,24Zm0,120a32,32,0,1,1,32-32A32,32,0,0,1,128,144Z"/>
+            </svg>
+            123, Narmadapuram, MP, India
+          </a>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <!-- Download Button -->
+    <button
+      onclick="downloadCard()"
+      class="w-full mx-auto max-w-[350px] bg-[#b00620] p-4 flex items-center gap-3 cursor-pointer text-white justify-center"
+    >
+      Download Card
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 256 256">
+        <path d="M128,24a8,8,0,0,1,8,8V136.69l34.34-34.35a8,8,0,0,1,11.32,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48A8,8,0,0,1,93.66,102.34L128,136.69V32A8,8,0,0,1,128,24ZM216,128a8,8,0,0,1,8,8v72a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V136a8,8,0,0,1,16,0v72H208V136A8,8,0,0,1,216,128Z"/>
+      </svg>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <script>
+      function downloadCard() {
+        const card = document.getElementById("card");
+        htmlToImage.toPng(card).then(function (dataUrl) {
+          const link = document.createElement("a");
+          link.download = "shrikant-digiting-card.png";
+          link.href = dataUrl;
+          link.click();
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download Card as Image</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-gray-100">
+    
+    <!-- Card -->
+    <div id="card" class="bg-white shadow-lg rounded-2xl p-6 w-80 text-center">
+   
+      <h2 class="text-xl font-bold mt-4">John Doe</h2>
+      <p class="text-gray-500">Web Developer</p>
+      <p class="text-sm text-gray-400 mt-2">
+        Building modern web applications with Next.js & TailwindCSS
+      </p>
+    </div>
+
+    <!-- Button -->
+    <div class="absolute bottom-10">
+      <button
+        onclick="downloadCard()"
+        class="bg-pink-600 hover:bg-pink-700 text-white font-medium px-5 py-2 rounded-xl shadow-md"
+      >
+        Download Card
+      </button>
+    </div>
+
+    <script>
+      function downloadCard() {
+        const card = document.getElementById("card");
+
+        htmlToImage.toPng(card).then(function (dataUrl) {
+          const link = document.createElement("a");
+          link.download = "card.png";
+          link.href = dataUrl;
+          link.click();
+        });
+      }
+    </script>
+  </body>
+</html>
