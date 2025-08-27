@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>3D Dice Game — Final</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Page look */
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b1220 0%, #0f172a 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: #e6eef8;
+      margin: 0;
+    }
+
+    /* Card */
+    .card {
+      width: 420px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+
+    h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    p.subtitle { color: #9fb3d6; margin-bottom: 18px; }
+
+    /* Scene for cube */
+    .scene {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px;
+      perspective: 1000px;
+    }
+
+    /* Cube / dice */
+    .dice {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 900ms cubic-bezier(.2,.9,.2,1);
+      margin: 0 auto;
+    }
+
+    .face {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 18px;
+      display: grid;
+      grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+      padding: 18px;
+      box-sizing: border-box;
+      background: linear-gradient(180deg, #ffffff 0%, #e6eef8 100%);
+      box-shadow: inset 0 6px 20px rgba(0,0,0,0.18), 0 10px 30px rgba(2,6,23,0.5);
+    }
+
+    .dot {
+      width: 22px;
+      height: 22px;
+      background: #0b1220;
+      border-radius: 50%;
+      justify-self: center;
+      align-self: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.06) inset;
+    }
+
+    /* place cube faces in 3D */
+    .front  { transform: rotateY(0deg) translateZ(90px); }
+    .back   { transform: rotateY(180deg) translateZ(90px); }
+    .right  { transform: rotateY(90deg) translateZ(90px); }
+    .left   { transform: rotateY(-90deg) translateZ(90px); }
+    .top    { transform: rotateX(90deg) translateZ(90px); }
+    .bottom { transform: rotateX(-90deg) translateZ(90px); }
+
+    /* rolling animation (fast 3D spin) */
+    .rolling {
+      animation: roll-anim 850ms linear infinite;
+    }
+    @keyframes roll-anim {
+      0%   { transform: rotateX(0deg) rotateY(0deg); }
+      25%  { transform: rotateX(180deg) rotateY(90deg); }
+      50%  { transform: rotateX(360deg) rotateY(180deg); }
+      75%  { transform: rotateX(540deg) rotateY(270deg); }
+      100% { transform: rotateX(720deg) rotateY(360deg); }
+    }
+
+    /* 3D button look */
+    .btn-3d {
+      position: relative;
+      display: inline-block;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform .14s ease, box-shadow .14s ease;
+      user-select: none;
+      outline: none;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.45), 0 14px 26px rgba(2,6,23,0.6);
+    }
+    .btn-3d:active {
+      transform: translateY(6px);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.45), 0 8px 18px rgba(2,6,23,0.55);
+    }
+
+    /* color themes (we toggle via JS) */
+    .btn-green  { background: linear-gradient(145deg,#22c55e,#16a34a); box-shadow: 0 8px 0 #0d5d2a, 0 14px 26px rgba(2,6,23,0.6); }
+    .btn-red    { background: linear-gradient(145deg,#ef4444,#b91c1c); box-shadow: 0 8px 0 #7f1d1d, 0 14px 26px rgba(2,6,23,0.6); }
+    .btn-blue   { background: linear-gradient(145deg,#2563eb,#1d4ed8); box-shadow: 0 8px 0 #1e3a8a, 0 14px 26px rgba(2,6,23,0.6); }
+
+    /* message style */
+    #message {
+      height: 28px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    /* small helper for subtitle under the cube */
+    .hint {
+      color: #9fb3d6;
+      font-size: .92rem;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎲 3D Dice</h1>
+    <p class="subtitle">Roll the cube — roll a <strong>6</strong> to win!</p>
+
+    <div id="message" class=""></div>
+
+    <div class="scene">
+      <div id="dice" class="dice" style="transform: rotateX(0deg) rotateY(0deg);">
+        <div class="face front"></div>
+        <div class="face back"></div>
+        <div class="face right"></div>
+        <div class="face left"></div>
+        <div class="face top"></div>
+        <div class="face bottom"></div>
+      </div>
+    </div>
+
+    <button id="gameBtn" class="btn-3d btn-green">Start</button>
+
+    <div class="hint">Single button: Start → Stop → Reset</div>
+  </div>
+
+  <script>
+    // DOM
+    const dice = document.getElementById('dice');
+    const btn = document.getElementById('gameBtn');
+    const message = document.getElementById('message');
+
+    // state machine
+    let state = 'ready'; // ready -> rolling -> stopped
+
+    // dot patterns (1..9 grid positions)
+    const patterns = {
+      1: [5],
+      2: [1,9],
+      3: [1,5,9],
+      4: [1,3,7,9],
+      5: [1,3,5,7,9],
+      6: [1,3,4,6,7,9]
+    };
+
+    // draw dots into a face element
+    function drawFace(faceEl, num) {
+      faceEl.innerHTML = '';
+      for (let i = 1; i <= 9; i++) {
+        const cell = document.createElement('div');
+        if (patterns[num].includes(i)) cell.className = 'dot';
+        faceEl.appendChild(cell);
+      }
+    }
+
+    // initialize faces to match a real die:
+    // front=1, back=6, right=3, left=4, top=5, bottom=2
+    function setupFaces() {
+      drawFace(dice.querySelector('.front'), 1);
+      drawFace(dice.querySelector('.back'), 6);
+      drawFace(dice.querySelector('.right'), 3);
+      drawFace(dice.querySelector('.left'), 4);
+      drawFace(dice.querySelector('.top'), 5);
+      drawFace(dice.querySelector('.bottom'), 2);
+    }
+    setupFaces();
+
+    // rotation mapping so face N appears facing the camera
+    const rotations = {
+      1: 'rotateX(0deg) rotateY(0deg)',
+      2: 'rotateX(90deg) rotateY(0deg)',
+      3: 'rotateX(0deg) rotateY(-90deg)',
+      4: 'rotateX(0deg) rotateY(90deg)',
+      5: 'rotateX(-90deg) rotateY(0deg)',
+      6: 'rotateX(180deg) rotateY(0deg)'
+    };
+
+    // helper to set button theme classes
+    function setBtnTheme(theme) {
+      btn.classList.remove('btn-green','btn-red','btn-blue');
+      if (theme === 'green') btn.classList.add('btn-green');
+      if (theme === 'red')   btn.classList.add('btn-red');
+      if (theme === 'blue')  btn.classList.add('btn-blue');
+    }
+
+    // initial theme
+    setBtnTheme('green');
+
+    // click handler: Start -> Stop -> Reset
+    btn.addEventListener('click', () => {
+      if (state === 'ready') {
+        // start rolling
+        message.textContent = '';
+        dice.classList.add('rolling');
+
+        btn.textContent = 'Stop';
+        setBtnTheme('red');
+        state = 'rolling';
+
+      } else if (state === 'rolling') {
+        // stop rolling and show random face
+        dice.classList.remove('rolling');
+
+        // pick random number 1..6
+        const result = Math.floor(Math.random() * 6) + 1;
+
+        // rotate cube to show the result
+        // add a tiny timeout so the removal of class finishes and transition is visible
+        setTimeout(() => {
+          dice.style.transform = rotations[result];
+        }, 20);
+
+        // show message
+        if (result === 6) {
+          message.textContent = '🎉 Winner! You rolled a 6!';
+          message.style.color = '#bbf7d0'; // light green
+          message.style.textShadow = '0 4px 18px rgba(34,197,94,0.18)';
+        } else {
+          message.textContent = '😢 Try Again!';
+          message.style.color = '#fecaca'; // light red
+          message.style.textShadow = '0 4px 18px rgba(239,68,68,0.12)';
+        }
+
+        btn.textContent = 'Reset';
+        setBtnTheme('blue');
+        state = 'stopped';
+
+      } else if (state === 'stopped') {
+        // reset to face 1
+        dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        message.textContent = '';
+        setBtnTheme('green');
+        btn.textContent = 'Start';
+        state = 'ready';
+      }
+    });
+
+    // optional: keyboard support (Space to Start/Stop)
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>
