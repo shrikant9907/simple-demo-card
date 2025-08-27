@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coin Flip Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* --- Coin --- */
+    .coin {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      perspective: 1000px;
+    }
+    .coin-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease-out;
+      will-change: transform;
+    }
+    .coin-inner.flip {
+      animation: spin 0.8s linear infinite;
+    }
+    .coin-front,
+    .coin-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #111827; /* black-ish */
+      box-shadow: inset 0 0 10px rgba(0,0,0,.25), 0 6px 18px rgba(0,0,0,.25);
+    }
+    .coin-front { /* Golden */
+      background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    }
+    .coin-back {  /* Silver */
+      background: radial-gradient(circle at 30% 30%, #d4d4d4, #6b7280);
+      transform: rotateY(180deg);
+    }
+    @keyframes spin {
+      0%   { transform: rotateY(0); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    /* --- Animated Switch (CSS-only) --- */
+    .switch {
+      position: relative;
+      width: 64px;
+      height: 32px;
+      display: inline-block;
+    }
+    .switch input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .switch .track {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #eab308, #b45309); /* golden look */
+      box-shadow: inset 0 0 6px rgba(0,0,0,.25);
+      transition: background .3s ease;
+    }
+    .switch .track::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,.25);
+      transform: translateX(0);
+      transition: transform .28s ease, box-shadow .2s ease;
+    }
+    /* Click bounce */
+    .switch .track:active::before { transform: translateX(0) scale(0.92); }
+    /* Checked state → Silver */
+    .switch input:checked + .track {
+      background: linear-gradient(135deg, #e5e7eb, #9ca3af); /* silver look */
+    }
+    .switch input:checked + .track::before {
+      transform: translateX(32px);
+    }
+    .switch input:checked + .track:active::before {
+      transform: translateX(32px) scale(0.92);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
+  <h1 class="text-3xl font-bold mb-6">The Toss</h1>
+
+  <!-- Alert -->
+  <div id="alertBox" class="mb-4 text-xl font-bold hidden"></div>
+
+  <!-- Coin -->
+  <div class="coin mb-8">
+    <div id="coinInner" class="coin-inner">
+      <div class="coin-front">Golden</div>
+      <div class="coin-back">Silver</div>
+    </div>
+  </div>
+
+  <!-- Winning Choice (Animated Switch) -->
+  <div class="flex items-center mb-8">
+    <span class="mr-3">Pick Your Side:</span>
+
+    <label class="switch">
+      <input id="winningSwitch" type="checkbox" aria-label="Choose Silver when checked; Golden when unchecked">
+      <span class="track"></span>
+    </label>
+
+    <span id="switchLabel" class="ml-3 font-bold text-yellow-400 select-none">Golden</span>
+  </div>
+
+  <!-- Single Button -->
+  <button id="mainBtn" class="px-8 py-3 rounded-2xl bg-green-600 text-white font-bold shadow-lg transition">
+    Start
+  </button>
+
+  <script>
+    const coinInner = document.getElementById('coinInner');
+    const mainBtn = document.getElementById('mainBtn');
+    const alertBox = document.getElementById('alertBox');
+    const winningSwitch = document.getElementById('winningSwitch');
+    const switchLabel = document.getElementById('switchLabel');
+
+    let state = "start"; // start → stop → reset
+
+    // Update label color/text smoothly
+    winningSwitch.addEventListener('change', () => {
+      if (winningSwitch.checked) {
+        switchLabel.textContent = "Silver";
+        switchLabel.classList.remove("text-yellow-400");
+        switchLabel.classList.add("text-gray-300");
+      } else {
+        switchLabel.textContent = "Golden";
+        switchLabel.classList.remove("text-gray-300");
+        switchLabel.classList.add("text-yellow-400");
+      }
+    });
+
+    mainBtn.addEventListener('click', () => {
+      if (state === "start") {
+        // Start flipping
+        alertBox.classList.add("hidden");
+        coinInner.classList.add('flip');
+        mainBtn.textContent = "Stop";
+        mainBtn.classList.replace("bg-green-600", "bg-red-600");
+        state = "stop";
+
+      } else if (state === "stop") {
+        // Stop flipping and decide
+        coinInner.classList.remove('flip');
+
+        // Random result (0 = Golden/front, 180 = Silver/back)
+        const result = Math.random() < 0.5 ? 0 : 180;
+        coinInner.style.transform = `rotateY(${result}deg)`;
+
+        const resultCoin = result === 0 ? "golden" : "silver";
+        const userChoice = winningSwitch.checked ? "silver" : "golden";
+
+        if (resultCoin === userChoice) {
+          alertBox.textContent = "🎉 You Win! Happy Festival 🎊";
+          alertBox.className = "mb-4 text-xl font-bold text-green-400";
+        } else {
+          alertBox.textContent = "😞 You Lose! Better Luck Next Time 👎";
+          alertBox.className = "mb-4 text-xl font-bold text-red-400";
+        }
+        alertBox.classList.remove("hidden");
+
+        mainBtn.textContent = "Reset";
+        mainBtn.classList.replace("bg-red-600", "bg-blue-600");
+        state = "reset";
+
+      } else {
+        // Reset
+        coinInner.classList.remove('flip');
+        coinInner.style.transform = "rotateY(0deg)";
+        alertBox.classList.add("hidden");
+        mainBtn.textContent = "Start";
+        mainBtn.classList.replace("bg-blue-600", "bg-green-600");
+        state = "start";
+      }
+    });
+  </script>
+</body>
+</html>
