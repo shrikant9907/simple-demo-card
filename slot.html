@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slot Machine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Digital font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    .slot {
+      width: 80px;
+      height: 100px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #111827;
+      box-shadow: inset 0 0 15px rgba(0,0,0,.8), 0 6px 12px rgba(0,0,0,.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .reel {
+      display: flex;
+      flex-direction: column;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: #facc15;
+      text-shadow: 0 0 8px #000;
+    }
+    .digit {
+      height: 100px;
+      width: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spin {
+      animation: scroll 0.3s linear infinite;
+    }
+    @keyframes scroll {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-800px); } /* 8 steps (0–3 repeated twice) * 100px */
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex flex-col items-center justify-center text-white">
+
+  <h1 class="text-3xl font-bold mb-6">🎰 Slot Machine</h1>
+
+  <!-- Alert -->
+  <div id="alertBox" class="mb-6 text-xl font-bold hidden"></div>
+
+  <!-- Slots -->
+  <div class="flex space-x-6 mb-8">
+    <div class="slot"><div id="reel1" class="reel"></div></div>
+    <div class="slot"><div id="reel2" class="reel"></div></div>
+    <div class="slot"><div id="reel3" class="reel"></div></div>
+  </div>
+
+  <!-- Button -->
+  <button id="gameBtn" class="px-8 py-3 rounded-2xl bg-green-600 text-white font-bold shadow-lg transition">
+    Start
+  </button>
+
+  <script>
+    const reels = [
+      document.getElementById("reel1"),
+      document.getElementById("reel2"),
+      document.getElementById("reel3"),
+    ];
+    const gameBtn = document.getElementById("gameBtn");
+    const alertBox = document.getElementById("alertBox");
+
+    let state = "ready"; // ready → spinning → stopped
+
+    // build each reel with repeating digits
+    function buildReel(r) {
+      r.innerHTML = "";
+      const sequence = [0,1,2,3,0,1,2,3,0]; // repeated to prevent gaps
+      sequence.forEach(n => {
+        const d = document.createElement("div");
+        d.className = "digit";
+        d.textContent = n;
+        r.appendChild(d);
+      });
+      r.dataset.result = 0;
+      r.style.transform = "translateY(0)";
+    }
+
+    reels.forEach(buildReel);
+
+    gameBtn.addEventListener("click", () => {
+      if (state === "ready") {
+        // Reset reels to 000 before spin
+        reels.forEach(r => {
+          r.style.transition = "none";
+          r.style.transform = "translateY(0)";
+          r.dataset.result = 0;
+        });
+        alertBox.textContent = "";
+        alertBox.classList.add("hidden");
+
+        // Start spinning
+        reels.forEach(r => r.classList.add("spin"));
+
+        gameBtn.textContent = "Stop";
+        gameBtn.classList.replace("bg-green-600", "bg-red-600");
+        state = "spinning";
+
+      } else if (state === "spinning") {
+        // Stop reels with random results staggered
+        reels.forEach((r, i) => {
+          setTimeout(() => {
+            r.classList.remove("spin");
+
+            // Random number 0–3
+            const num = Math.floor(Math.random() * 4);
+            r.style.transition = "transform 0.6s ease-out";
+            r.style.transform = `translateY(-${num * 100}px)`;
+            r.dataset.result = num;
+
+            // After last reel stops → check result
+            if (i === reels.length - 1) {
+              setTimeout(() => {
+                const results = reels.map(r => parseInt(r.dataset.result));
+                if (results[0] === results[1] && results[1] === results[2]) {
+                  alertBox.textContent = "🎉 Winner! All numbers match 🎊";
+                  alertBox.className = "mb-6 text-xl font-bold text-green-400";
+                } else {
+                  alertBox.textContent = "😞 You Lose! Try Again 👎";
+                  alertBox.className = "mb-6 text-xl font-bold text-red-400";
+                }
+                alertBox.classList.remove("hidden");
+              }, 800);
+            }
+          }, i * 500); // stagger delay
+        });
+
+        gameBtn.textContent = "Reset";
+        gameBtn.classList.replace("bg-red-600", "bg-blue-600");
+        state = "stopped";
+
+      } else if (state === "stopped") {
+        // Reset game to 000
+        alertBox.textContent = "";
+        alertBox.classList.add("hidden");
+
+        reels.forEach(r => {
+          r.style.transition = "none";
+          r.style.transform = "translateY(0)";
+          r.dataset.result = 0;
+        });
+
+        gameBtn.textContent = "Start";
+        gameBtn.classList.remove("bg-blue-600");
+        gameBtn.classList.add("bg-green-600");
+        state = "ready";
+      }
+    });
+  </script>
+</body>
+</html>
